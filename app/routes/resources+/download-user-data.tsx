@@ -21,18 +21,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 					contentType: true,
 				},
 			},
-			notes: {
-				include: {
-					images: {
-						select: {
-							id: true,
-							createdAt: true,
-							updatedAt: true,
-							contentType: true,
-						},
-					},
-				},
-			},
 			password: false, // <-- intentionally omit password
 			sessions: true,
 			roles: true,
@@ -50,13 +38,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 						url: `${domain}/resources/user-images/${user.image.id}`,
 				  }
 				: null,
-			notes: user.notes.map(note => ({
-				...note,
-				images: note.images.map(image => ({
-					...image,
-					url: `${domain}/resources/note-images/${image.id}`,
-				})),
-			})),
 		},
 	})
 }
