@@ -1,4 +1,4 @@
-app = "epic-egghead-0ec7"
+app = "epic-egghead"
 primary_region = "sjc"
 kill_signal = "SIGINT"
 kill_timeout = 5
