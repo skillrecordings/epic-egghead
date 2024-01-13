@@ -82,6 +82,7 @@
     "get-port": "^7.0.0",
     "glob": "^10.3.10",
     "helmet": "^7.1.0",
+    "inngest": "^3.10.0",
     "intl-parse-accept-language": "^1.0.0",
     "isbot": "^3.7.1",
     "litefs-js": "^1.1.2",
