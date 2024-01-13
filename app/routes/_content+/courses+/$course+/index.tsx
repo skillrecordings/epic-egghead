@@ -1,8 +1,8 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
-import { invariantResponse } from '@epic-web/invariant'
-import {courses} from "#app/data/playlists-short"
 import {useLoaderData} from "#node_modules/@remix-run/react";
+import { invariantResponse } from '@epic-web/invariant'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import {Link} from "@remix-run/react";
+import {courses} from "#app/data/playlists-short"
 
 
 export async function loader({ params }: LoaderFunctionArgs) {

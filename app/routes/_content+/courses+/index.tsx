@@ -1,14 +1,12 @@
-import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node'
-import {courses} from "#app/data/playlists-short"
 import {useLoaderData} from "#node_modules/@remix-run/react";
-import {cn, useDelayedIsPending} from "#app/utils/misc.tsx";
-import {ErrorList} from "#app/components/forms.tsx";
-import {GeneralErrorBoundary} from "#app/components/error-boundary.tsx";
+import { json } from '@remix-run/node'
 import {Link} from "@remix-run/react";
+import {GeneralErrorBoundary} from "#app/components/error-boundary.tsx";
+import {ErrorList} from "#app/components/forms.tsx";
+import {courses} from "#app/data/playlists-short"
+import {cn, useDelayedIsPending} from "#app/utils/misc.tsx";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  console.log(courses.length)
-
+export async function loader() {
   return json({ status: 'idle', courses } as const)
 }
 
