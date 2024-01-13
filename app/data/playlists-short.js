@@ -1,4 +1,4 @@
-[
+export const courses = [
   {
     "id": 1152992,
     "slug": "an-introduction-to-the-react-testing-library-42204aaa",
