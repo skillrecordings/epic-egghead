@@ -88,7 +88,10 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
 		{ title: data ? 'egghead' : 'Error | egghead' },
-		{ name: 'description', content: `bite-sized video courses for busy developers` },
+		{
+			name: 'description',
+			content: `bite-sized video courses for busy developers`,
+		},
 	]
 }
 

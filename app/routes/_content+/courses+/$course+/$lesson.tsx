@@ -1,36 +1,67 @@
-import {useLoaderData} from "#node_modules/@remix-run/react";
+import { useLoaderData } from '#node_modules/@remix-run/react'
 import { invariantResponse } from '@epic-web/invariant'
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
-import {courses} from "#app/data/playlists-short"
-
+import { prisma } from '#app/utils/db.server.ts'
+import MuxPlayer from '@mux/mux-player-react'
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  console.log({params})
-  const course = courses.find(course => course.slug === params.course)
-  const lesson = course?.lessons.find(lesson => lesson.slug === params.lesson)
+	console.log({ params })
 
+	// const lesson = course?.lessons.find(lesson => lesson.slug === params.lesson)
+	// invariantResponse(lesson, 'Lesson not found', { status: 404 })
+	const lesson = await prisma.lesson.findFirst({
+		where: {
+			slug: params.lesson,
+		},
+		include: {
+			video: true,
+			course: {
+				include: {
+					instructor: true,
+				},
+			},
+		},
+	})
 
-  invariantResponse(lesson, 'Lesson not found', { status: 404 })
+	invariantResponse(lesson, 'Lesson not found', { status: 404 })
 
-  return json({ course, lesson })
+	console.log({ lesson: lesson.video })
+
+	const muxAsset = await fetch(
+		`https://api.mux.com/video/v1/assets/${lesson.video?.mux_asset_id}`,
+		{
+			headers: {
+				Authorization: `Basic ${Buffer.from(
+					`${process.env.MUX_TOKEN_ID}:${process.env.MUX_TOKEN_SECRET}`,
+				).toString('base64')}`,
+				'Content-Type': 'application/json',
+			},
+		},
+	)
+		.then(res => res.json())
+		.then((data: any) => data?.data)
+
+	return json({ course: lesson.course, lesson, muxAsset })
 }
 
 export default function LessonRoute() {
-  const data = useLoaderData<typeof loader>()
-  const lesson = data.lesson
+	const { course, lesson, muxAsset } = useLoaderData<typeof loader>()
 
-  return (
-    <div className="container mb-48 mt-36 flex flex-col items-center justify-center">
-      <div className="relative">
-        {lesson.title} by {lesson.instructor}
-        {lesson.image && (
-          <img
-            src={lesson.image}
-            alt={lesson.title}
-            className="h-52 w-52 object-cover"
-          />
-        )}
-      </div>
-    </div>
-  )
+	console.log(muxAsset)
+
+	return (
+		<div className="container mb-48 mt-36 flex flex-col items-center justify-center">
+			<div className="relative">
+				{lesson.title} by {course?.instructor?.full_name}
+				{course?.image_url && (
+					<img
+						src={course?.image_url}
+						alt={lesson.title}
+						className="h-52 w-52 object-cover"
+					/>
+				)}
+				<MuxPlayer playbackId={muxAsset.playback_ids[0].id} />
+			</div>
+		</div>
+	)
 }

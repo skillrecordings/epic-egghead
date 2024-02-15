@@ -1,7 +1,6 @@
-import {inngest} from '#app/inngest/inngest.server'
-
+import { inngest } from '#app/inngest/inngest.server'
 
 export const inngestConfig = {
-  client: inngest,
-  functions: [],
+	client: inngest,
+	functions: [],
 }

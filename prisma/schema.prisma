@@ -131,3 +131,145 @@ model Connection {
 
   @@unique([providerName, providerId])
 }
+
+model Collection {
+  id        String               @id @default(cuid())
+  name      String
+  type      String
+  resources CollectionResource[]
+  sections  CollectionSection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+}
+
+model CollectionResource {
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId String
+
+  @@id([collectionId, resourceId])
+}
+
+model CollectionSection {
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId String
+
+  @@id([collectionId, sectionId])
+}
+
+model Section {
+  id          String              @id @default(cuid())
+  name        String
+  type        String
+  resources   SectionResource[]
+  collections CollectionSection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+}
+
+model SectionResource {
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId String
+
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId String
+
+  @@id([sectionId, resourceId])
+}
+
+model Resource {
+  id          String               @id @default(cuid())
+  collections CollectionResource[]
+  sections    SectionResource[]
+  type        String
+
+  muxVideoResourceId String?           @map("muxVideoResource")
+  muxVideoResource   MuxVideoResource? @relation(fields: [muxVideoResourceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([muxVideoResourceId])
+}
+
+model MuxVideoResource {
+  id            String @id @default(cuid())
+  muxPlaybackId String
+  muxAssetId    String @unique
+
+  resource Resource?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Video {
+  id            Int      @id
+  slug          String
+  source_url    String?
+  subtitles_url String?
+  size          Int?
+  mux_asset_id  String?
+  state         String   @default("unprocessed")
+  lessons       Lesson[]
+}
+
+// Represents the 'tags' table
+model Tag {
+  id        Int     @id
+  slug      String
+  image_url String?
+  body      String?
+}
+
+// Represents the 'instructors' table
+model Instructor {
+  id         Int      @id
+  full_name  String?
+  slug       String
+  avatar_url String?
+  courses    Course[]
+  lessons    Lesson[]
+}
+
+// Represents the 'lessons' table
+model Lesson {
+  id            Int     @id
+  video_id      Int
+  instructor_id Int
+  slug          String
+  state         String  @default("draft")
+  course_id     Int?
+  title         String
+  body          String?
+
+  video      Video      @relation(fields: [video_id], references: [id])
+  instructor Instructor @relation(fields: [instructor_id], references: [id])
+  course     Course?    @relation(fields: [course_id], references: [id])
+}
+
+// Represents the 'courses' table
+model Course {
+  id            Int     @id
+  slug          String
+  image_url     String?
+  instructor_id Int?
+  state         String  @default("draft")
+  access_state  String  @default("indexed")
+  body          String?
+  title         String
+
+  instructor Instructor? @relation(fields: [instructor_id], references: [id])
+  lessons    Lesson[]
+}
