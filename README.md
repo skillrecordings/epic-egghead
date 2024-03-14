@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center"><a href="https://www.epicweb.dev/epic-stack">The Epic Stack 🚀</a></h1>
+  <h1 align="center">Epic Egghead 🚀</h1>
   <strong align="center">
     Ditch analysis paralysis and start shipping Epic Web apps.
   </strong>
@@ -11,11 +11,21 @@
   </p>
 </div>
 
-```sh
-npx create-epic-app@latest
-```
+## Setup
 
-[![The Epic Stack](https://github-production-user-asset-6210df.s3.amazonaws.com/1500684/246885449-1b00286c-aa3d-44b2-9ef2-04f694eb3592.png)](https://www.epicweb.dev/epic-stack)
+- Clone the project
+- `npm install`
+- Copy `.env.example` to `.env`
+- `npm run db:migrations`
+- (optional) Seed the database with `npm run db-seed`
+- `npm run dev` to start the server
+
+## Reset the DB
+
+- Delete ./data.db
+- Delete the contents of app/db/migrations
+- Run `npm run db:migrations`
+- (optional) Seed the database with `npm run db-seed`
 
 [The Epic Stack](https://www.epicweb.dev/epic-stack)
 

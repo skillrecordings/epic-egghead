@@ -1,4 +1,7 @@
 import { type MetaFunction } from '@remix-run/node'
+import { Link } from '@remix-run/react'
+import { Button } from '#app/components/ui/button'
+
 export const meta: MetaFunction = () => [{ title: 'egghead' }]
 
 export default function Index() {
@@ -10,7 +13,7 @@ export default function Index() {
 						data-heading
 						className="mt-8 animate-slide-top text-4xl font-medium text-foreground [animation-delay:0.3s] [animation-fill-mode:backwards] md:text-5xl xl:mt-4 xl:animate-slide-left xl:text-6xl xl:[animation-delay:0.8s] xl:[animation-fill-mode:backwards]"
 					>
-						<a href="https://egghead.io">egghead</a>
+						<Link to="/">egghead</Link>
 					</h1>
 					<p
 						data-paragraph
@@ -18,6 +21,10 @@ export default function Index() {
 					>
 						bite-sized video courses for busy web developers
 					</p>
+
+					<Button asChild className="mt-8">
+						<Link to="/courses">Explore Courses</Link>
+					</Button>
 				</div>
 			</div>
 		</main>
