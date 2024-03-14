@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 import { extendTailwindMerge } from 'tailwind-merge'
+import { z } from 'zod'
 import { extendedTheme } from './extended-theme.ts'
 
 export function getUserImgSrc(imageId?: string | null) {
@@ -282,4 +283,16 @@ export async function downloadFile(url: string, retries: number = 0) {
 		if (retries > MAX_RETRIES) throw e
 		return downloadFile(url, retries + 1)
 	}
+}
+
+/**
+ * Returns a Zod schema for a value that might be stringified
+ */
+export function JSONSchema<T extends Zod.Schema>(schema: T) {
+	return schema.or(
+		z
+			.string()
+			.transform(content => JSON.parse(content as string))
+			.pipe(schema),
+	)
 }
